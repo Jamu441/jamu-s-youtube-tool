@@ -31,6 +31,7 @@ def find_video():
     global url
     global img
     global yt
+    success_label.config(text="")
     url = input_box.get("1.0", "end-1c")
     print(url)
     try:
@@ -55,6 +56,9 @@ def find_video():
 
 def download():
     global yt
+    res = []
+    for stream in yt.streams:
+        res.append(stream.resolution) 
     file_path = filedialog.askdirectory()
     if file_path != "":
         selection = option_text.get()
@@ -67,7 +71,7 @@ def download():
                 success_label.config(text="Download Failed")
         elif selection == "Video & Audio":
             try:
-                video = yt.streams.filter(res="1080p")
+                video = yt.streams.filter(res=res[1])
                 video.first().download(output_path=file_path)
                 success_label.config(text="Download Complete")
                 mp3 = yt.streams.get_audio_only()
